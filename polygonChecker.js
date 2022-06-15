@@ -21,15 +21,20 @@ function isOnBound(x, y, points) {
     return checkLine(x1, y1, x2, y2, x, y);
 }
 
+function isIntersection(x, y, x1, y1, x2, y2) {
+    return x > Math.max(x1, x2) && (y1 > y && y2 < y || y1 < y && y2 > y);
+}
+
 function isInPolygonExclusive(x, y, points) {
     // Ray casting алгоритм
     // Считаем сколько раз луч, параллельный Ох, проведенный из точки, пересекает стороны полигона
     let countIntersections = 0;
     for (let i = 1; i < points.length; i++) {
         const x1 = points[i - 1][0], y1 = points[i - 1][1], x2 = points[i][0], y2 = points[i][1];
-        if (x > Math.max(x1, x2) && (y1 > y && y2 < y || y1 < y && y2 > y)) {
-            countIntersections++;
-        }
+        if (isIntersection(x, y, x1, y1, x2, y2)) countIntersections++;
     }
+
+    const x1 = points[points.length - 1][0], y1 = points[points.length - 1][1], x2 = points[0][0], y2 = points[0][1];
+    if (isIntersection(x, y, x1, y1, x2, y2)) countIntersections++;
     return countIntersections % 2 === 1;
 }
